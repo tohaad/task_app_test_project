@@ -19,17 +19,9 @@ class UserLoginSerializer(serializers.ModelSerializer):
         password = attrs.get('password')
         user = authenticate(request=self.context['request'], username=username, password=password)
         if not user:
-            raise serializers.ValidationError(
-                {
-                    'non_field_errors': _('Unable to log in with provided credentials.')
-                }
-            )
+            raise serializers.ValidationError({'non_field_errors': _('Unable to log in with provided credentials.')})
         if not user.is_active:
-            raise serializers.ValidationError(
-                {
-                    'non_field_errors': _('User account is disabled.')
-                }
-            )
+            raise serializers.ValidationError({'non_field_errors': _('User account is disabled.')})
         attrs['user'] = user
         return attrs
 
@@ -47,9 +39,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'password', 'password2', 'token')
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
+        extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, instance):
         if instance['password'] != instance['password2']:

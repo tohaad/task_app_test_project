@@ -11,11 +11,7 @@ class TaskFilterBackend(BaseFilterBackend):
 
 
 class TaskFilterSet(FilterSet):
-    order_by = OrderingFilter(
-        fields=(
-            ('created_at', 'created_at'),
-        )
-    )
+    order_by = OrderingFilter(fields=(('created_at', 'created_at'),))
 
     field_labels = {
         'created_at': 'Created at',

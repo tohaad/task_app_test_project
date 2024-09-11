@@ -22,7 +22,7 @@ GUNICORN_LOGGERS = {
         'handlers': ['console'],
         'propagate': False,
         'level': 'INFO',
-    }
+    },
 }
 
 LOGGING['loggers'].update(GUNICORN_LOGGERS)

@@ -1,0 +1,43 @@
+line-length = 120
+indent-width = 4
+target-version = "py312"
+exclude = [
+    ".git",
+    "__init__.py",
+    "conftest.py",
+    "tests",
+    "migrations"
+]
+[format]
+quote-style = "single"
+
+[lint]
+# https://docs.astral.sh/ruff/rules/
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # Pyflakes errors
+    "PL",  # Pylint errors
+    "T20",  # flake8-print errors
+    "ERA",  # eradicate errors
+    "RUF",  # Ruff-specific rules
+    "DJ",  #  flake8-django errors
+    "BLE",  # flake8-blind-except errors
+    "SLF",  # flake8-self errors
+    "C4",  # flake8-comprehensions errors
+    "ARG004",  # Unused static method argument
+    "N805",  # First argument of a method should be named `self`
+    "N815",  # Variable should not be mixedCase
+    "PGH004",  # Use specific rule codes when using `noqa`
+    "RET504",  # unnecessary assignment to variable before return statement
+    "SIM300",  # Unnecessary parentheses on raised exception
+    "RSE102",  # Yoda conditions are discouraged
+]
+
+ignore = [
+    "RUF012",  # Mutable class attributes should be annotated with typing.ClassVar
+]
+
+[lint.extend-per-file-ignores]
+"urls.py" = ["RUF005"]  # collection-literal-concatenation
+"__init__.py" = ["F401", "F403"]  # unused-import, undefined-local-with-import-star

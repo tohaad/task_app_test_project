@@ -9,8 +9,8 @@ from tasks.serializers import TaskModelSerializer
 
 class TaskGenericViewSet(viewsets.ModelViewSet):
     serializer_class = TaskModelSerializer
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.AllowAny,)
     queryset = Task.objects.all()
     filter_backends = (TaskFilterBackend, DjangoFilterBackend, SearchFilter)
-    search_fields = ('name', )
+    search_fields = ('name',)
     filterset_class = TaskFilterSet

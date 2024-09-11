@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+
 import sys
 
 import environ
@@ -145,12 +146,8 @@ LOGGING = {
             'propagate': False,
             'level': 'INFO',
         },
-        'django.request': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': False
-        }
-    }
+        'django.request': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
+    },
 }
 
 # Internationalization
@@ -186,9 +183,7 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
