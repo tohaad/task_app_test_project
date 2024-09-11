@@ -17,7 +17,7 @@ docker
     ...
     └── .env
 ```
-If there are no environment files you can copy it manually from ```env.examples``` directory:
+If there are no environment files you can copy it manually from ```envs.examples``` directory:
 ##### app
 ```bash
 $ cp envs.example/app.env docker/app/.env
