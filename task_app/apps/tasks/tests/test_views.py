@@ -218,23 +218,19 @@ class TestTaskGenericViewSet:
 
         assert Task.objects.exists()
 
-    def test_filter_by_is_done(self, api_client):
-        completed_task = TaskFactory(is_done=True)
-        in_progress_task = TaskFactory(is_done=False)
+    @pytest.mark.parametrize('is_done', [True, False])
+    def test_filter_by_is_done(self, is_done, api_client):
+        expected_task = TaskFactory(is_done=is_done)
+        TaskFactory(is_done=not is_done)
 
         response = api_client.get(self.list_action_url)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 2
 
-        response = api_client.get(self.list_action_url, data={'is_done': True})
+        response = api_client.get(self.list_action_url, data={'is_done': is_done})
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 1
-        assert response.data[0]['id'] == completed_task.id
-
-        response = api_client.get(self.list_action_url, data={'is_done': False})
-        assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]['id'] == in_progress_task.id
+        assert response.data[0]['id'] == expected_task.id
 
     def test_order_by_created_at(self, api_client):
         task_1 = TaskFactory()
