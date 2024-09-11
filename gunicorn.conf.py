@@ -2,7 +2,7 @@ import copy
 import gunicorn
 from config.settings import LOGGING as BASE_LOGGING_CONFIG
 
-gunicorn.SERVER_SOFTWARE = "Server"
+gunicorn.SERVER_SOFTWARE = 'Server'
 keepalive = 40
 
 LOGGING = copy.deepcopy(BASE_LOGGING_CONFIG)
