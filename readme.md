@@ -37,13 +37,13 @@ $ docker-compose build
 ```
 
 #### Run the Stack
-This brings up all services together. The first time it is run it might take a while to get started, but subsequent runs will occur quickly.
+This brings up all services together. The first time it is run it might take a while to get started, but subsequent runs will occur quickly
 
 Open a terminal at the project root and run the following for local development
 ```bash
 $ docker-compose up -d
 ```
-This command starts the containers in the background and leaves them running.
+This command starts the containers in the background and leaves them running
 
 In case you want to aggregate the output of each container use following command
 ```bash
@@ -97,7 +97,7 @@ $ docker-compose down --rmi local -v
 
 ### Testing and coverage
 #### Tests
-This project uses the [Pytest](https://docs.pytest.org/en/latest/index.html), a framework for easily building simple and scalable tests.
+This project uses the [Pytest](https://docs.pytest.org/en/latest/index.html), a framework for easily building simple and scalable tests
 
 To perform testing just run the following command
 ```bash
