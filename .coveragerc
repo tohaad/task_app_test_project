@@ -1,12 +1,4 @@
 # https://coverage.readthedocs.io/en/latest/config.html
 
 [run]
-branch = True
-include = task_app/apps/*
-omit =
-    *migrations*
-    *tests*
-    conftest.py
-    */__init__.py
-    */apps.py
-    */admin.py
+omit = */tests/*, */migrations/*, conftest.py, */__init__.py, */apps.py, */admin.py

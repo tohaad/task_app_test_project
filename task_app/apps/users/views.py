@@ -56,6 +56,7 @@ class UserLogoutAPIView(APIView):
 
 
 class UserAuthenticationCheckAPIView(APIView):
+    """Returns 200 if user is authenticated."""
     permission_classes = (IsAuthenticated, )
 
     @extend_schema(responses={200: EmptyBodySerializer})

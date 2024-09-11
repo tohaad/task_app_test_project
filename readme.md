@@ -63,7 +63,6 @@ $ docker-compose exec app python manage.py migrate
 #### At this point app should be accessible
 - Admin panel at [localhost:8000/admin/](http://localhost:8000/admin/)
 - API docs at [localhost:8000/api/docs/](http://localhost:8000/api/docs/)
-- API at [localhost:8000/api/](http://localhost:8000/api/)
 
 #### Create a superuser
 ```bash
