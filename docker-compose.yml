@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:16.4-alpine
+    networks:
+      - db
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file:
+      - docker/db/.env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d task_app_db_name -U task_app_db_user" ]
+      interval: 5s
+      timeout: 1s
+      retries: 5
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    networks:
+      - db
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/app
+    env_file:
+      - docker/db/.env
+      - docker/app/.env
+    command: |
+      /usr/bin/env sh -c "gunicorn -k gevent config.wsgi --bind=0.0.0.0:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+networks:
+  db:
+    driver: bridge
+volumes:
+  pgdata:
+    name: task_app_db
+    driver: local
+    

@@ -1,0 +1,13 @@
+django==5.1.1  # https://www.djangoproject.com/
+django-environ==0.11.2  # https://github.com/joke2k/django-environ
+psycopg2-binary==2.9.9  # https://github.com/psycopg/psycopg2
+django-model-utils==5.0.0  # https://github.com/jazzband/django-model-utils
+django-filter==24.3 # https://django-filter.readthedocs.io/en/latest/guide/install.html#installation
+djangorestframework==3.15.2  # https://github.com/encode/django-rest-framework
+drf-spectacular==0.27.2  # https://drf-spectacular.readthedocs.io/en/latest/
+gunicorn==23.0.0   # https://docs.gunicorn.org/en/20.x/index.html
+gevent==24.2.1  # https://www.gevent.org/
+pytest==8.3.3  # https://github.com/pytest-dev/pytest
+pytest-django==4.9.0  # https://pytest-django.readthedocs.io/en/latest/
+pytest-cov==5.0.0  # https://github.com/pytest-dev/pytest-cov
+factory-boy==3.3.1  # https://factoryboy.readthedocs.io/en/stable/
