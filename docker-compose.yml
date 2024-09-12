@@ -8,7 +8,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     env_file:
-      - docker/db/.env
+      - envs/db.env
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d postgres" ]
       interval: 1m
@@ -19,7 +19,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: docker/app/Dockerfile
+      dockerfile: Dockerfile
     networks:
       - db
     ports:
@@ -27,8 +27,8 @@ services:
     volumes:
       - ./:/app
     env_file:
-      - docker/db/.env
-      - docker/app/.env
+      - envs/db.env
+      - envs/app.env
     command: |
       /usr/bin/env sh -c "gunicorn -k gevent config.wsgi --bind=0.0.0.0:8000"
     depends_on:

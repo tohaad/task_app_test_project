@@ -7,27 +7,22 @@
 - Docker Compose ([Docker Compose installation guide](https://docs.docker.com/compose/install/))
 
 #### Configuring the Environment
-You can find all environment variables under ```docker/``` directory. This is how it looks like:
+You can find all environment variables under ```envs/``` directory. This is how it should look like:
 ```
-docker
-├── app
-│   ...
-│   └── .env
-└── db
-    ...
-    └── .env
+envs
+├── app.env
+├── app.example.env
+├── db.env
+└── db.example.env
 ```
-If there are no environment files you can copy it manually from ```envs.examples``` directory:
+To create your own, local env files from examples:
 ##### app
 ```bash
-$ cp envs.example/app.env docker/app/.env
+$ cp envs/app.example.env envs/app.env
 ```
 ##### db
 ```bash
-$ mkdir docker/db/
-```
-```bash
-$ cp envs.example/db.env docker/db/.env
+$ cp envs/db.example.env envs/db.env
 ```
 
 #### Build the Stack

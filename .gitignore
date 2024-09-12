@@ -5,3 +5,6 @@
 staticfiles/
 
 .coverage
+
+app.env
+db.env
