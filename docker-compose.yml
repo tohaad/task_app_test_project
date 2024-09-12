@@ -10,10 +10,12 @@ services:
     env_file:
       - docker/db/.env
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -d task_app_db_name -U task_app_db_user" ]
-      interval: 5s
-      timeout: 1s
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d postgres" ]
+      interval: 1m
+      timeout: 10s
       retries: 5
+      start_period: 3s
+      start_interval: 1s
   app:
     build:
       context: .
