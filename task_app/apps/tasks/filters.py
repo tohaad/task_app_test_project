@@ -19,4 +19,4 @@ class TaskFilterSet(FilterSet):
 
     class Meta:
         model = Task
-        fields = ['is_done', 'order_by']
+        fields = ['status', 'order_by']

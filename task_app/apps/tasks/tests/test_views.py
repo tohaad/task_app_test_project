@@ -31,7 +31,7 @@ class TestTaskGenericViewSet:
     @pytest.fixture
     def invalid_payload(self):
         return {
-            'is_done': 'abracadabra',
+            'status': 'abracadabra',
         }
 
     def test_list_action_succeed_for_unauthenticated_user(self, api_client, user):
@@ -44,7 +44,7 @@ class TestTaskGenericViewSet:
         for item in response.data:
             assert item['name'] is not None
             assert item['description'] is not None
-            assert item['is_done'] is not None
+            assert item['status'] is not None
             assert item['created_at'] is not None
             assert item['id'] != task_created_by_authenticated_user.id
 
@@ -61,7 +61,7 @@ class TestTaskGenericViewSet:
         for item in response.data:
             assert item['name'] is not None
             assert item['description'] is not None
-            assert item['is_done'] is not None
+            assert item['status'] is not None
             assert item['created_at'] is not None
             assert item['id'] != task_created_by_other_authenticated_user.id
 
@@ -75,7 +75,7 @@ class TestTaskGenericViewSet:
         assert instance
         assert instance.name == valid_payload['name']
         assert instance.description == valid_payload['description']
-        assert instance.is_done is False
+        assert instance.status == Task.STATUS.to_do
         assert instance.created_by is None
         assert instance.created_at is not None
 
@@ -98,7 +98,7 @@ class TestTaskGenericViewSet:
         assert instance
         assert instance.name == valid_payload['name']
         assert instance.description == valid_payload['description']
-        assert instance.is_done is False
+        assert instance.status == Task.STATUS.to_do
         assert instance.created_by == user
         assert instance.created_at is not None
 
@@ -155,7 +155,7 @@ class TestTaskGenericViewSet:
         assert response.data['id'] == task.id
         assert response.data['name'] == task.name
         assert response.data['description'] == task.description
-        assert response.data['is_done'] == task.is_done
+        assert response.data['status'] == task.status
 
     def test_retrieve_action_failed_for_unauthenticated_user(self, api_client, task_for_authenticated_user):
         detail_action_url = reverse(self.detail_url, args=(task_for_authenticated_user.id,))
@@ -171,7 +171,7 @@ class TestTaskGenericViewSet:
         assert response.data['id'] == task_for_authenticated_user.id
         assert response.data['name'] == task_for_authenticated_user.name
         assert response.data['description'] == task_for_authenticated_user.description
-        assert response.data['is_done'] == task_for_authenticated_user.is_done
+        assert response.data['status'] == task_for_authenticated_user.status
 
     def test_retrieve_action_failed_for_authenticated_user(self, api_client, task_for_authenticated_user, user):
         detail_action_url = reverse(self.detail_url, args=(task_for_authenticated_user.id,))
@@ -223,20 +223,20 @@ class TestTaskGenericViewSet:
     @pytest.mark.parametrize(
         'query,length',
         (
-            ({'is_done': True}, 1),
-            ({'is_done': False}, 1),
+            ({'status': Task.STATUS.done}, 1),
+            ({'status': Task.STATUS.to_do}, 1),
             ({}, 2)
         )
     )
-    def test_filter_by_is_done(self, query, length, api_client):
-        TaskFactory(is_done=True)
-        TaskFactory(is_done=False)
+    def test_filter_by_status(self, query, length, api_client):
+        TaskFactory(status=Task.STATUS.done)
+        TaskFactory(status=Task.STATUS.to_do)
 
         response = api_client.get(self.list_action_url, data=query)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == length
         if query:
-            assert response.data[0]['is_done'] == query['is_done']
+            assert response.data[0]['status'] == query['status']
 
     @pytest.mark.parametrize(
         'query,is_reverse',
