@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 from django.urls import reverse
 from rest_framework import status
@@ -218,64 +220,61 @@ class TestTaskGenericViewSet:
 
         assert Task.objects.exists()
 
-    @pytest.mark.parametrize('is_done', [True, False])
-    def test_filter_by_is_done(self, is_done, api_client):
-        expected_task = TaskFactory(is_done=is_done)
-        TaskFactory(is_done=not is_done)
+    @pytest.mark.parametrize(
+        'query,length',
+        (
+            ({'is_done': True}, 1),
+            ({'is_done': False}, 1),
+            ({}, 2)
+        )
+    )
+    def test_filter_by_is_done(self, query, length, api_client):
+        TaskFactory(is_done=True)
+        TaskFactory(is_done=False)
 
-        response = api_client.get(self.list_action_url)
+        response = api_client.get(self.list_action_url, data=query)
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data) == length
+        if query:
+            assert response.data[0]['is_done'] == query['is_done']
+
+    @pytest.mark.parametrize(
+        'query,is_reverse',
+        (
+            ({'order_by': 'created_at'}, False),
+            ({'order_by': '-created_at'}, True),
+            ({}, True)
+        )
+    )
+    def test_order_by_created_at(self, query, is_reverse, api_client):
+        TaskFactory.create_batch(2)
+        response = api_client.get(self.list_action_url, data=query)
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 2
+        assert response.data == sorted(
+            response.data,
+            key=lambda x: datetime.fromisoformat(x['created_at']),
+            reverse=is_reverse
+        )
 
-        response = api_client.get(self.list_action_url, data={'is_done': is_done})
+    @pytest.mark.parametrize(
+        'query,expected_result_cnt',
+        (
+            ({'search': 'abracadabra'}, 0),
+            ({'search': 'task_1'}, 1),
+            ({'search': 'task_2'}, 1),
+            ({'search': ''}, 2),
+            ({'search': 'task'}, 2),
+            ({}, 2)
+         )
+    )
+    def search_by_name(self, query, expected_result_cnt, api_client):
+        TaskFactory(name='task_1')
+        TaskFactory(name='task_2')
+
+        response = api_client.get(self.list_action_url, data=query)
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]['id'] == expected_task.id
+        assert len(response.data) == expected_result_cnt
 
-    def test_order_by_created_at(self, api_client):
-        task_1 = TaskFactory()
-        task_2 = TaskFactory()
-
-        response = api_client.get(self.list_action_url)
-        assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 2
-        assert response.data[0]['id'] == task_2.id
-        assert response.data[1]['id'] == task_1.id
-
-        response = api_client.get(self.list_action_url, data={'order_by': 'created_at'})
-        assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 2
-        assert response.data[0]['id'] == task_1.id
-        assert response.data[1]['id'] == task_2.id
-
-        response = api_client.get(self.list_action_url, data={'order_by': '-created_at'})
-        assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 2
-        assert response.data[0]['id'] == task_2.id
-        assert response.data[1]['id'] == task_1.id
-
-    def search_by_name(self, api_client):
-        task_1 = TaskFactory(name='task_1')
-        task_2 = TaskFactory(name='task_2')
-
-        response = api_client.get(self.list_action_url)
-        assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 2
-
-        response = api_client.get(self.list_action_url, data={'search': task_1.name})
-        assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]['id'] == task_1.id
-
-        response = api_client.get(self.list_action_url, data={'search': task_2.name})
-        assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 1
-        assert response.data[0]['id'] == task_2.id
-
-        response = api_client.get(self.list_action_url, data={'search': 'abracadabra'})
-        assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 0
-
-        response = api_client.get(self.list_action_url, data={'search': 'task'})
-        assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 2
+        if expected_result_cnt == 1:
+            assert response.data[0]['name'] == query['search']
